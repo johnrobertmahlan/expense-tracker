@@ -3,6 +3,13 @@ require 'json'
 
 module ExpenseTracker
   class API < Sinatra::Base
+    # Instances of this class will be created when HTTP requests come through to my app
+    def initialize(ledger: Ledger.new)
+      @ledger = ledger
+      super()
+    end
+
+    # BELOW ARE MY ROUTES!!! (but they're also methods??? is that just a Sinatra thing instead of separating out routes and controllers?)
     # this method is just creating a dummy hash with the same key every time
     # once we hook up a DB, we'll update this so that we can post real expenses
     post '/expenses' do

@@ -3,6 +3,8 @@ require 'json'
 require 'pry'
 require_relative '../../app/api'
 
+# ACCEPTANCE TESTS!!!
+
 module ExpenseTracker
   RSpec.describe 'expense tracker API' do
     include Rack::Test::Methods
