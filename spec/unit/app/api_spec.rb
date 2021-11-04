@@ -50,7 +50,18 @@ module ExpenseTracker
           expect(parsed).to include('expense_id' => 417)
         end
 
-        # it 'responses with a 200 (OK)'
+        it 'responds with a 200 (OK)' do
+          expense = { 'some' => 'data' }
+
+          allow(ledger).to receive(:record)
+            .with(expense)
+            .and_return(RecordResult.new(true, 417, nil))
+
+          post '/expenses', JSON.generate(expense)
+          
+          # WHY NOT: expect(last_response).to have_http_status(200)
+          expect(last_response.status).to eq(200)
+        end
       end
 
       # STEP 3: we need to test what happens when we FAIL
