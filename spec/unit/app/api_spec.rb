@@ -41,6 +41,10 @@ module ExpenseTracker
           # STEP 8: now that we've configure our test, we need to DO stuff
           # so, we call the POST method from Rack::Test to our expenses endpoint
           # and we EXPECT it to return the expense_id that we stubbed out above
+          # essentially, we CALL the POST method that we routed in our API class
+          # and PASS IN as our param the result of JSON.generate(expense)
+          # that is why { 'some' => 'data' } is returned as our expense when we put a pry in our API class
+          # and then since we just stubbed out a result, we have the result we want
           post '/expenses', JSON.generate(expense)
           parsed = JSON.parse(last_response.body)
           expect(parsed).to include('expense_id' => 417)

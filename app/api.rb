@@ -1,5 +1,6 @@
 require 'sinatra/base'
 require 'json'
+require 'pry'
 
 module ExpenseTracker
   class API < Sinatra::Base
@@ -12,8 +13,11 @@ module ExpenseTracker
     # BELOW ARE MY ROUTES!!! (but they're also methods??? is that just a Sinatra thing instead of separating out routes and controllers?)
     # this method is just creating a dummy hash with the same key every time
     # once we hook up a DB, we'll update this so that we can post real expenses
+    #   JSON.generate('expense_id' => 42)
     post '/expenses' do
-      JSON.generate('expense_id' => 42)
+      expense = JSON.parse(request.body.read)
+      result = @ledger.record(expense)
+      JSON.generate('expense_id' => result.expense_id)
     end
 
     # right now, this method is kind of useless because we're not persisting any requests
