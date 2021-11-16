@@ -19,6 +19,13 @@ module ExpenseTracker
     # but since we ONLY want to test the API class, not the Ledger class
     # we'll create a MOCK of that class using instance_double
     let(:ledger) { instance_double ('ExpenseTracker::Ledger') }
+    let(:expense) { {'some' => 'data'} }
+
+    before do
+      allow(ledger).to receive(:record)
+        .with(expense)
+        .and_return(RecordResult.new(true, 417, nil))
+    end
 
     # STEP 1: Test our ability to post expenses
     describe 'POST /expenses' do
@@ -28,17 +35,19 @@ module ExpenseTracker
         it 'returns the expense id' do
 
           # STEP 6: we want some dummy data to pass into our Ledger double
-          expense = {'some' => 'data'}
+          # THIS WAS REFACTORED
+          # expense = {'some' => 'data'}
           
           # STEP 7: we configure how our ledger object will work
           # we ALLOW ledger to receive record (which is a METHOD not yet defined on the Ledger class)
           # the record method takes a PARAM: expense
           # the method then RETURNS a new instance of the RecordResult class with the data we stub out here
-          allow(ledger).to receive(:record)
-            .with(expense)
-            .and_return(RecordResult.new(true, 417, nil))
+          # THIS WAS REFACTORED
+          #   allow(ledger).to receive(:record)
+          #     .with(expense)
+          #     .and_return(RecordResult.new(true, 417, nil))
 
-          # STEP 8: now that we've configure our test, we need to DO stuff
+          # STEP 8: now that we've configured our test, we need to DO stuff
           # so, we call the POST method from Rack::Test to our expenses endpoint
           # and we EXPECT it to return the expense_id that we stubbed out above
           # essentially, we CALL the POST method that we routed in our API class
@@ -51,14 +60,16 @@ module ExpenseTracker
         end
 
         it 'responds with a 200 (OK)' do
-          expense = { 'some' => 'data' }
-
-          allow(ledger).to receive(:record)
-            .with(expense)
-            .and_return(RecordResult.new(true, 417, nil))
+          # THIS WAS REFACTORED
+          # expense = { 'some' => 'data' }
+          
+          # THIS WAS ALSO REFACTORED
+          #   allow(ledger).to receive(:record)
+          #     .with(expense)
+          #     .and_return(RecordResult.new(true, 417, nil))
 
           post '/expenses', JSON.generate(expense)
-          
+
           # WHY NOT: expect(last_response).to have_http_status(200)
           expect(last_response.status).to eq(200)
         end
