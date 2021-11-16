@@ -17,7 +17,17 @@ module ExpenseTracker
     post '/expenses' do
       expense = JSON.parse(request.body.read)
       result = @ledger.record(expense)
-      JSON.generate('expense_id' => result.expense_id)
+      
+      if result.success?
+        JSON.generate(
+            {
+            'expense_id' => result.expense_id
+            }
+        )
+      else 
+        status 422
+        JSON.generate('error' => result.error_message)
+      end
     end
 
     # right now, this method is kind of useless because we're not persisting any requests
