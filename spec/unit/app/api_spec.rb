@@ -4,7 +4,8 @@ require 'rack/test'
 # UNIT TESTS!!!
 
 module ExpenseTracker
-  RecordResult = Struct.new(:success?, :expense_id, :error_message)
+  #   THIS WAS REFACTORED TO MOVE INTO ITS OWN REAL CLASS
+  #   RecordResult = Struct.new(:success?, :expense_id, :error_message)
 
   RSpec.describe API do
     include Rack::Test::Methods
@@ -98,6 +99,47 @@ module ExpenseTracker
           
           expect(last_response.status).to eq(422)
         end
+      end
+    end
+
+    describe 'GET /expenses/:date' do
+      context 'when expenses exist on the given date' do
+        let(:date) { '2017-06-10' }
+        let(:expense) { { 'new' => 'data' } }
+        let(:expenses) { ExpenseTracker::Ledger.new.expenses_on(date) }
+        let(:expected) {
+          {
+            'payee'     => 'Starbucks',
+            'amount'    => 5.75,
+            'date'      => '2017-06-10'
+          }
+        }
+
+        before do
+          allow(ledger).to receive(:expenses_on)
+            .with(date)
+            .and_return(expenses.to_s)
+        end
+
+        it 'returns the expense records as JSON' do
+          get "/expenses/#{date}", {"date" => date}
+          
+          expect(expenses.to_s).to include(expected.to_s)
+        end
+
+        it 'responds with a 200 (OK)' do
+          
+        end
+      end
+
+      context 'when no expenses exist on the given date' do
+        # it 'returns an empty array as JSON' do
+          
+        # end
+
+        # it 'responds with a 200 (OK)' do
+
+        # end
       end
     end
   end

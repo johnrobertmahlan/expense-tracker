@@ -1,6 +1,7 @@
 require 'sinatra/base'
 require 'json'
 require 'pry'
+require_relative 'ledger'
 
 module ExpenseTracker
   class API < Sinatra::Base
@@ -35,7 +36,11 @@ module ExpenseTracker
     # so, we need to find a way to persist expenses in a DB
     # then we can grab them using params
     get '/expenses/:date' do
-      JSON.generate([])
+    # PARAM objects are accessible slightly differently from Rack and Sinatra
+      date = request.params["date"]
+    #   date = params["date"]
+      expenses = @ledger.expenses_on(date)
+    #   expenses.to_s => SO APPARENTLY RETURN VALUES MUST BE CAST AS STRINGS FOR SINATRA TO WORK
     end
   end
 end
