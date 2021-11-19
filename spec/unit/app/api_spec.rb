@@ -4,7 +4,7 @@ require 'rack/test'
 # UNIT TESTS!!!
 
 module ExpenseTracker
-  #   THIS WAS REFACTORED TO MOVE INTO ITS OWN REAL CLASS
+  #   THIS WAS REFACTORED TO MOVE INTO ITS OWN CLASS
   #   RecordResult = Struct.new(:success?, :expense_id, :error_message)
 
   RSpec.describe API do
@@ -13,6 +13,10 @@ module ExpenseTracker
     # STEP 4: We'll need an app again since every HTTP request should create a new instance of API
     def app
       API.new(ledger: ledger)
+    end
+
+    def parse_data(data)
+      JSON.parse(data)
     end
 
     # STEP 5: since the API class takes an instance of the Ledger class as a param
@@ -57,8 +61,7 @@ module ExpenseTracker
           # that is why { 'some' => 'data' } is returned as our expense when we put a pry in our API class
           # and then since we just stubbed out a result, we have the result we want
           post '/expenses', JSON.generate(expense)
-          parsed = JSON.parse(last_response.body)
-          expect(parsed).to include('expense_id' => 417)
+          expect(parse_data(last_response.body)).to include('expense_id' => 417)
         end
 
         it 'responds with a 200 (OK)' do
@@ -89,14 +92,11 @@ module ExpenseTracker
 
         it 'returns an error message' do
           post '/expenses', JSON.generate(expense)
-          parsed = JSON.parse(last_response.body)
-          expect(parsed).to include('error' => 'Expense incomplete')
+          expect(parse_data(last_response.body)).to include('error' => 'Expense incomplete')
         end
 
         it 'responds with a 422 (Unprocessable entity)' do
           post '/expenses', JSON.generate(expense)
-
-          
           expect(last_response.status).to eq(422)
         end
       end
@@ -123,6 +123,7 @@ module ExpenseTracker
 
         it 'returns the expense records as JSON' do
           get "/expenses/#{date}", {"date" => date}
+          
           
           expect(expenses.to_s).to include(expected.to_s)
         end

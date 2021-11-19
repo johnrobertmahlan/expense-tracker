@@ -31,16 +31,17 @@ module ExpenseTracker
       end
     end
 
-    # right now, this method is kind of useless because we're not persisting any requests
-    # since there's no data to get, we're going to keep failing our specs
-    # so, we need to find a way to persist expenses in a DB
-    # then we can grab them using params
     get '/expenses/:date' do
-    # PARAM objects are accessible slightly differently from Rack and Sinatra
+    # params are on the request object for Rack but seem to be free-standing in Sinatra
+
       date = request.params["date"]
-    #   date = params["date"]
+    # date = params["date"]
+
+    # likewise, the return values for Rack and Sinatra are different
+    # Sinatra requires that they be cast as strings
+    
       expenses = @ledger.expenses_on(date)
-    #   expenses.to_s => SO APPARENTLY RETURN VALUES MUST BE CAST AS STRINGS FOR SINATRA TO WORK
+    # expenses.to_s => SO APPARENTLY RETURN VALUES MUST BE CAST AS STRINGS FOR SINATRA TO WORK
     end
   end
 end
