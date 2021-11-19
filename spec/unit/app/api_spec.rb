@@ -140,13 +140,25 @@ module ExpenseTracker
       end
 
       context 'when no expenses exist on the given date' do
-        # it 'returns an empty array as JSON' do
-          
-        # end
+        let(:date) { "Date" }
+        let(:expense) { { 'bad' => 'data' } }
+        let(:expenses) { [] }
 
-        # it 'responds with a 200 (OK)' do
+        before do
+          allow(ledger).to receive(:expenses_on)
+            .with(date)
+            .and_return(expenses)
+        end
 
-        # end
+        it 'returns an empty array as JSON' do
+          get "/expenses/#{date}", {"date" => date}
+          expect(parse_data(last_response.body)).to eq([])
+        end
+
+        it 'responds with a 200 (OK)' do
+          get "/expenses/#{date}", {"date" => date}
+          expect(last_response.status).to eq(200)
+        end
       end
     end
   end
