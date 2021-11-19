@@ -38,7 +38,7 @@ module ExpenseTracker
     end
 
     def expenses_on(date)
-        EXPENSES.select {|e| e['date'] == date}
+      EXPENSES.select {|e| e['date'] == date}
     end
   end
 end

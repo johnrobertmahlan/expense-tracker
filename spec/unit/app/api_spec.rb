@@ -39,7 +39,6 @@ module ExpenseTracker
         end
 
         it 'returns the expense id' do
-
           # STEP 6: we want some dummy data to pass into our Ledger double
           # THIS WAS REFACTORED
           # expense = {'some' => 'data'}
@@ -104,32 +103,39 @@ module ExpenseTracker
 
     describe 'GET /expenses/:date' do
       context 'when expenses exist on the given date' do
-        let(:date) { '2017-06-10' }
+        let(:date) { "Date" }
         let(:expense) { { 'new' => 'data' } }
-        let(:expenses) { ExpenseTracker::Ledger.new.expenses_on(date) }
-        let(:expected) {
-          {
-            'payee'     => 'Starbucks',
-            'amount'    => 5.75,
-            'date'      => '2017-06-10'
-          }
+        let(:expenses) { 
+          [
+            expense_1 = {
+              'payee'     => 'Starbucks',
+              'amount'    => 5.75,
+              'date'      => '2017-06-10'
+            },
+    
+            expense_2 = {
+              'payee'     => 'Zoo',
+              'amount'    => 15.25,
+              'date'      => '2017-06-10'
+            },
+          ] 
         }
+        
 
         before do
           allow(ledger).to receive(:expenses_on)
             .with(date)
-            .and_return(expenses.to_s)
+            .and_return(expenses)
         end
 
         it 'returns the expense records as JSON' do
           get "/expenses/#{date}", {"date" => date}
-          
-          
-          expect(expenses.to_s).to include(expected.to_s)
+          expect(last_response.body).to eq(expenses.to_s)
         end
 
         it 'responds with a 200 (OK)' do
-          
+          get "/expenses/#{date}", {"date" => date}
+          expect(last_response.status).to eq(200)
         end
       end
 
