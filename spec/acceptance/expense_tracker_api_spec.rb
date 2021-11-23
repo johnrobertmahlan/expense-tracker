@@ -6,7 +6,7 @@ require_relative '../../app/api'
 # ACCEPTANCE TESTS!!!
 
 module ExpenseTracker
-  RSpec.describe 'expense tracker API' do
+  RSpec.describe 'expense tracker API', :db do
     include Rack::Test::Methods
 
     # STEP 2: Sinatra requires a method called APP that returns an object representing the app
