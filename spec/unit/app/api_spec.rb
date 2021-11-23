@@ -121,7 +121,6 @@ module ExpenseTracker
           ] 
         }
         
-
         before do
           allow(ledger).to receive(:expenses_on)
             .with(date)

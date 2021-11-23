@@ -35,6 +35,13 @@ module ExpenseTracker
 
   class Ledger
     def record(expense)
+      # REMEMBER that the expense is being passed as a param here
+      # it's RETRIEVED in the POST method in api.rb, where it comes from the request body
+      # so all we have to do here is record the expense to the DB
+
+      DB[:expenses].insert(expense)
+      id = DB[:expenses].max(:id) # the ids will be sequential, so the HIGHEST id will be the NEWEST expense
+      RecordResult.new(true, id, nil)
     end
 
     def expenses_on(date)

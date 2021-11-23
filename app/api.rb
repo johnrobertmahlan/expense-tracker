@@ -33,7 +33,7 @@ module ExpenseTracker
 
       # likewise, the return values for Rack and Sinatra are different
       # Sinatra requires that they be cast as strings
-
+      
       expenses = @ledger.expenses_on(date)
       expenses.to_s
     end
